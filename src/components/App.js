@@ -1,8 +1,12 @@
 import "../App.css";
-import AppRouter from "./Router";
+import { useState } from "react";
+import AppRouter from "components/Router";
+import { authService } from "firebaseClient";
 
 function App() {
-    return <AppRouter />;
+    const [isLoggedIn, setIsLoggedIn] = useState(authService.currentUser);
+
+    return <AppRouter isLoggedIn={isLoggedIn} />;
 }
 
 export default App;
