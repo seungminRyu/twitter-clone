@@ -5,6 +5,7 @@ function Auth() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isNewAccount, setIsNewAccount] = useState(true);
+    const [error, setError] = useState("");
 
     const onChange = (e) => {
         const { name, value } = e.target;
@@ -32,11 +33,13 @@ function Auth() {
                     password
                 );
             }
-            console.log(res);
         } catch (e) {
-            console.error(e);
+            console.log(e.code);
+            setError(e.message);
         }
     };
+
+    const toggleAccount = () => setIsNewAccount((prev) => !prev);
 
     return (
         <div>
@@ -62,6 +65,10 @@ function Auth() {
                     value={isNewAccount ? "계정 생성" : "로그인"}
                 ></input>
             </form>
+            <p>{error}</p>
+            <p onClick={toggleAccount}>
+                {isNewAccount ? "로그인" : "계정 생성"}
+            </p>
             <button>구글 계정으로 로그인</button>
             <button>깃허브 계정으로 로그인</button>
         </div>
