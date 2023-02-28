@@ -1,4 +1,4 @@
-import { authService } from "firebaseClient";
+import { authService, firebaseInstance } from "firebaseClient";
 import React, { useState } from "react";
 
 function Auth() {
@@ -41,6 +41,19 @@ function Auth() {
 
     const toggleAccount = () => setIsNewAccount((prev) => !prev);
 
+    const onSnsLoginBtnClick = async (e) => {
+        const snsName = e.target.name;
+        let provider;
+
+        if (snsName === "google") {
+            provider = new firebaseInstance.auth.GoogleAuthProvider();
+        } else if (snsName === "github") {
+            provider = new firebaseInstance.auth.GithubAuthProvider();
+        }
+
+        await authService.signInWithPopup(provider);
+    };
+
     return (
         <div>
             <form onSubmit={onSubmit}>
@@ -69,8 +82,12 @@ function Auth() {
             <p onClick={toggleAccount}>
                 {isNewAccount ? "로그인" : "계정 생성"}
             </p>
-            <button>구글 계정으로 로그인</button>
-            <button>깃허브 계정으로 로그인</button>
+            <button onClick={onSnsLoginBtnClick} name="google">
+                구글 계정으로 로그인
+            </button>
+            <button onClick={onSnsLoginBtnClick} name="github">
+                깃허브 계정으로 로그인
+            </button>
         </div>
     );
 }
