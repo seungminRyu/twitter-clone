@@ -1,19 +1,27 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import Profile from "routes/Profile";
 import Auth from "../routes/Auth";
 import Home from "../routes/Home";
+import Navigation from "./Navigation";
 
 function AppRouter(props) {
     const { isLoggedIn } = props;
 
     return (
-        <Routes>
-            {isLoggedIn ? (
-                <Route path="/" element={<Home />} />
-            ) : (
-                <Route path="/" element={<Auth />} />
-            )}
-        </Routes>
+        <>
+            {isLoggedIn && <Navigation />}
+            <Routes>
+                {isLoggedIn ? (
+                    <>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/profile" element={<Profile />} />
+                    </>
+                ) : (
+                    <Route path="/" element={<Auth />} />
+                )}
+            </Routes>
+        </>
     );
 }
 
