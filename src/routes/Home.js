@@ -1,15 +1,42 @@
 import { db } from "firebaseClient";
-import React, { useState } from "react";
-import { collection, addDoc } from "firebase/firestore/lite";
+import React, { useEffect, useState } from "react";
+import { collection, addDoc, query, getDocs } from "firebase/firestore";
+
+const tweetCollectionRef = collection(db, "tweet");
 
 function Home() {
     const [tweet, setTweet] = useState("");
-    const ref = collection(db, "tweet");
+    const [tweets, setTweets] = useState([]);
+
+    useEffect(() => {
+        const getTweets = async () => {
+            let nextTweets = [];
+            try {
+                const q = query(tweetCollectionRef);
+                const querySnapshot = await getDocs(q);
+                querySnapshot.forEach((doc) => {
+                    nextTweets = [
+                        {
+                            ...doc.data(),
+                            id: doc.id,
+                        },
+                        ...nextTweets,
+                    ];
+                });
+                setTweets(nextTweets);
+            } catch (e) {
+                console.error(e);
+                alert("네트워크 에러");
+            }
+        };
+
+        getTweets();
+    }, []);
 
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            await addDoc(ref, {
+            await addDoc(tweetCollectionRef, {
                 tweet,
                 createdAt: Date.now(),
             });
@@ -41,6 +68,11 @@ function Home() {
                     트위터 생성"
                 ></input>
             </form>
+            <div>
+                {tweets.map((aTweet) => (
+                    <h4>{aTweet.tweet}</h4>
+                ))}
+            </div>
         </div>
     );
 }
