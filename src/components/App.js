@@ -6,11 +6,13 @@ import { authService } from "firebaseClient";
 function App() {
     const [init, setInit] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
-        authService.onAuthStateChanged((user) => {
-            if (user) {
+        authService.onAuthStateChanged((_user) => {
+            if (_user) {
                 setIsLoggedIn(true);
+                setUser(_user);
             } else {
                 setIsLoggedIn(false);
             }
@@ -20,7 +22,7 @@ function App() {
 
     if (!init) return <div>로딩중 입니다.</div>;
 
-    return <AppRouter isLoggedIn={isLoggedIn} />;
+    return <AppRouter isLoggedIn={isLoggedIn} user={user} />;
 }
 
 export default App;
