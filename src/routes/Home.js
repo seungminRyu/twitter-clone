@@ -1,6 +1,7 @@
 import { db } from "firebaseClient";
 import React, { useEffect, useState } from "react";
 import { collection, addDoc, query, onSnapshot } from "firebase/firestore";
+import TweetItem from "components/TweetItem";
 
 const tweetCollectionRef = collection(db, "tweets");
 
@@ -8,6 +9,7 @@ function Home(props) {
     const { user } = props;
     const [tweet, setTweet] = useState("");
     const [tweets, setTweets] = useState([]);
+    console.log(tweets);
 
     useEffect(() => {
         const initSubscribingTweets = () => {
@@ -68,7 +70,11 @@ function Home(props) {
             </form>
             <div>
                 {tweets.map((aTweet, i) => (
-                    <h4 key={`tweet-item-${i}`}>{aTweet.text}</h4>
+                    <TweetItem
+                        key={aTweet.id}
+                        tweet={aTweet}
+                        isOwner={aTweet.creatorId === user.uid}
+                    />
                 ))}
             </div>
         </div>
