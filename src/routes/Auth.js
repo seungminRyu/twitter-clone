@@ -19,22 +19,17 @@ function Auth() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
         try {
-            let res;
             if (isNewAccount) {
-                res = await authService.createUserWithEmailAndPassword(
+                await authService.createUserWithEmailAndPassword(
                     email,
                     password
                 );
             } else {
-                res = await authService.signInWithEmailAndPassword(
-                    email,
-                    password
-                );
+                await authService.signInWithEmailAndPassword(email, password);
             }
         } catch (e) {
-            console.log(e.code);
+            console.error(e);
             setError(e.message);
         }
     };
