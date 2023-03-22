@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { addDoc, query, onSnapshot } from "firebase/firestore";
 import TweetItem from "components/TweetItem";
-import { tweetCollectionRef } from "firebaseClient";
+import { storage, tweetCollectionRef } from "firebaseClient";
+import { ref, uploadString } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
 function Home(props) {
     const { user } = props;
@@ -38,13 +40,16 @@ function Home(props) {
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            await addDoc(tweetCollectionRef, {
-                text: tweet,
-                createdAt: Date.now(),
-                creatorId: user.uid,
-            });
-            setTweet("");
+            const storageRef = ref(storage, `${user.uid}/${uuidv4()}`);
+            const res = await uploadString(storageRef, photo, "data_url");
+            // await addDoc(tweetCollectionRef, {
+            //     text: tweet,
+            //     createdAt: Date.now(),
+            //     creatorId: user.uid,
+            // });
+            // setTweet("");
         } catch (e) {
+            console.error(e);
             alert("트위터 생성중 에러 발생: ", e.message);
         }
     };
