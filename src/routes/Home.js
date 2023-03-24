@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { addDoc, query, onSnapshot } from "firebase/firestore";
 import TweetItem from "components/TweetItem";
 import { storage, tweetCollectionRef } from "firebaseClient";
-import { ref, uploadString } from "firebase/storage";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
 function Home(props) {
     const { user } = props;
     const [tweet, setTweet] = useState("");
     const [tweets, setTweets] = useState([]);
-    const [photo, setPhoto] = useState(null);
+    const [photo, setPhoto] = useState("");
 
     useEffect(() => {
         const initSubscribingTweets = () => {
@@ -37,17 +37,26 @@ function Home(props) {
         initSubscribingTweets();
     }, []);
 
+    const uploadPhoto = async () => {
+        const storageRef = ref(storage, `${user.uid}/${uuidv4()}`);
+        const photoUrl = await uploadString(storageRef, photo, "data_url").then(
+            (result) => getDownloadURL(result.ref)
+        );
+        return photoUrl;
+    };
+
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            const storageRef = ref(storage, `${user.uid}/${uuidv4()}`);
-            const res = await uploadString(storageRef, photo, "data_url");
-            // await addDoc(tweetCollectionRef, {
-            //     text: tweet,
-            //     createdAt: Date.now(),
-            //     creatorId: user.uid,
-            // });
-            // setTweet("");
+            const photoUrl = photo ? await uploadPhoto() : "";
+            await addDoc(tweetCollectionRef, {
+                text: tweet,
+                createdAt: Date.now(),
+                creatorId: user.uid,
+                photoUrl,
+            });
+            setTweet("");
+            setPhoto("");
         } catch (e) {
             console.error(e);
             alert("트위터 생성중 에러 발생: ", e.message);

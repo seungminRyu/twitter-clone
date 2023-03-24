@@ -47,6 +47,9 @@ function TweetItem(props) {
             ) : (
                 <>
                     <h4>{tweet.text}</h4>
+                    {tweet.photoUrl && (
+                        <img src={tweet.photoUrl} width="50px" height="50px" />
+                    )}
                     {isOwner && (
                         <>
                             <button onClick={onDeleteClick}>삭제</button>
