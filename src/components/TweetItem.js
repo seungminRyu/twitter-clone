@@ -1,5 +1,6 @@
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "firebaseClient";
+import { deleteObject, ref } from "firebase/storage";
+import { db, storage } from "firebaseClient";
 import React, { useState } from "react";
 
 function TweetItem(props) {
@@ -10,7 +11,10 @@ function TweetItem(props) {
     const onDeleteClick = async () => {
         const ok = window.confirm("트위터를 삭제하시겠습니까?");
         if (ok) {
-            await deleteDoc(doc(db, "tweets", tweet.id));
+            const targetTweetRef = doc(db, "tweets", tweet.id);
+            const targetPhotoRef = ref(storage, tweet.photoUrl);
+            await deleteDoc(targetTweetRef);
+            await deleteObject(targetPhotoRef);
         }
     };
 
