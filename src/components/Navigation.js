@@ -1,14 +1,15 @@
 import { Link } from "react-router-dom";
 
-function Navigation() {
+function Navigation(props) {
+    const { user } = props;
     return (
         <div>
             <ul>
                 <li>
-                    <Link to="/">home</Link>
+                    <Link to="/">홈</Link>
                 </li>
                 <li>
-                    <Link to="/profile">profile</Link>
+                    <Link to="/profile">{user.displayName}의 프로필</Link>
                 </li>
             </ul>
         </div>

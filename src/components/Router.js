@@ -10,7 +10,7 @@ function AppRouter(props) {
 
     return (
         <>
-            {isLoggedIn && <Navigation />}
+            {isLoggedIn && <Navigation user={user} />}
             <Routes>
                 {isLoggedIn ? (
                     <>
