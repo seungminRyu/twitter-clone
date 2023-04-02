@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Profile(props) {
-    const { user } = props;
+    const { user, refreshUser } = props;
     const [userTweets, setUserTweets] = useState([]);
     const [newDisplayName, setNewDisPlayName] = useState(user.displayName);
     const navigate = useNavigate();
@@ -43,6 +43,7 @@ function Profile(props) {
             await user.updateProfile({
                 displayName: newDisplayName,
             });
+            refreshUser();
         }
     };
 

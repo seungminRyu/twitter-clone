@@ -9,10 +9,14 @@ function App() {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        authService.onAuthStateChanged((_user) => {
-            if (_user) {
+        authService.onAuthStateChanged((userData) => {
+            if (userData) {
                 setIsLoggedIn(true);
-                setUser(_user);
+                setUser({
+                    displayName: userData.displayName,
+                    uid: userData.uid,
+                    updateProfile: (args) => userData.updateProfile(args),
+                });
             } else {
                 setIsLoggedIn(false);
             }
@@ -20,9 +24,24 @@ function App() {
         });
     }, []);
 
+    const refreshUser = () => {
+        const user = authService.currentUser;
+        setUser({
+            displayName: user.displayName,
+            uid: user.uid,
+            updateProfile: (args) => user.updateProfile(args),
+        });
+    };
+
     if (!init) return <div>로딩중 입니다.</div>;
 
-    return <AppRouter isLoggedIn={isLoggedIn} user={user} />;
+    return (
+        <AppRouter
+            isLoggedIn={isLoggedIn}
+            user={user}
+            refreshUser={refreshUser}
+        />
+    );
 }
 
 export default App;

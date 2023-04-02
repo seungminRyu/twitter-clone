@@ -6,7 +6,7 @@ import Home from "../routes/Home";
 import Navigation from "./Navigation";
 
 function AppRouter(props) {
-    const { isLoggedIn, user } = props;
+    const { isLoggedIn, user, refreshUser } = props;
 
     return (
         <>
@@ -17,7 +17,12 @@ function AppRouter(props) {
                         <Route path="/" element={<Home user={user} />} />
                         <Route
                             path="/profile"
-                            element={<Profile user={user} />}
+                            element={
+                                <Profile
+                                    user={user}
+                                    refreshUser={refreshUser}
+                                />
+                            }
                         />
                     </>
                 ) : (
