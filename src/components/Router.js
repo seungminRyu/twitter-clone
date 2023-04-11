@@ -4,6 +4,7 @@ import Profile from "routes/Profile";
 import Auth from "../routes/Auth";
 import Home from "../routes/Home";
 import Navigation from "./Navigation";
+import NotFound from "./NotFound";
 
 function AppRouter(props) {
     const { isLoggedIn, user, refreshUser } = props;
@@ -14,7 +15,7 @@ function AppRouter(props) {
             <Routes>
                 {isLoggedIn ? (
                     <>
-                        <Route path="/" element={<Home user={user} />} />
+                        <Route index element={<Home user={user} />} />
                         <Route
                             path="/profile"
                             element={
@@ -26,8 +27,9 @@ function AppRouter(props) {
                         />
                     </>
                 ) : (
-                    <Route path="/" element={<Auth />} />
+                    <Route index element={<Auth />} />
                 )}
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </>
     );
