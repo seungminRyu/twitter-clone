@@ -1,5 +1,10 @@
 import AuthForm from "components/AuthForm";
-import { authService, firebaseInstance } from "firebaseClient";
+import {
+    GithubAuthProvider,
+    GoogleAuthProvider,
+    signInWithPopup,
+} from "firebase/auth";
+import { auth } from "firebaseClient";
 import React from "react";
 
 function Auth() {
@@ -8,12 +13,12 @@ function Auth() {
         let provider;
 
         if (snsName === "google") {
-            provider = new firebaseInstance.auth.GoogleAuthProvider();
+            provider = new GoogleAuthProvider();
         } else if (snsName === "github") {
-            provider = new firebaseInstance.auth.GithubAuthProvider();
+            provider = new GithubAuthProvider();
         }
 
-        await authService.signInWithPopup(provider);
+        await signInWithPopup(auth, provider);
     };
 
     return (

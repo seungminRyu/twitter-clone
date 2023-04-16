@@ -1,6 +1,7 @@
 import TweetItem from "components/TweetItem";
+import { signOut } from "firebase/auth";
 import { getDocs, onSnapshot, orderBy, query, where } from "firebase/firestore";
-import { authService, tweetCollectionRef } from "firebaseClient";
+import { auth, tweetCollectionRef } from "firebaseClient";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +12,7 @@ function Profile(props) {
     const navigate = useNavigate();
 
     const onLogoutBtnClick = async () => {
-        await authService.signOut();
+        await signOut(auth);
         navigate("/");
     };
 
@@ -23,12 +24,14 @@ function Profile(props) {
             orderBy("createdAt")
         );
         const querySnapshot = await getDocs(_query);
+
         querySnapshot.forEach((doc) => {
             loadedUserTweets.push({
                 ...doc.data(),
                 id: doc.id,
             });
         });
+
         setUserTweets(loadedUserTweets);
     };
 
@@ -39,6 +42,7 @@ function Profile(props) {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+
         if (newDisplayName !== user.displayName) {
             await user.updateProfile({
                 displayName: newDisplayName,
@@ -59,8 +63,10 @@ function Profile(props) {
                     where("creatorId", "==", user.uid),
                     orderBy("createdAt")
                 );
+
                 onSnapshot(_query, (docs) => {
                     let loadedUserTweets = [];
+
                     docs.forEach((aDoc) => {
                         loadedUserTweets.push({
                             ...aDoc.data(),

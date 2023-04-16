@@ -1,7 +1,8 @@
 import "../App.css";
 import { useEffect, useState } from "react";
 import AppRouter from "components/Router";
-import { authService } from "firebaseClient";
+import { auth } from "firebaseClient";
+import { onAuthStateChanged } from "firebase/auth";
 
 function App() {
     const [init, setInit] = useState(false);
@@ -9,7 +10,7 @@ function App() {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        authService.onAuthStateChanged((userData) => {
+        onAuthStateChanged(auth, (userData) => {
             if (userData) {
                 setIsLoggedIn(true);
                 setUser({
@@ -25,7 +26,7 @@ function App() {
     }, []);
 
     const refreshUser = () => {
-        const user = authService.currentUser;
+        const user = auth.currentUser;
         setUser({
             displayName: user.displayName,
             uid: user.uid,

@@ -11,16 +11,20 @@ function AppRouter(props) {
 
     return (
         <>
+            <h1>트위터</h1>
+            <button>테스트 버튼</button>
             {isLoggedIn && <Navigation user={user} />}
             <Routes>
                 {isLoggedIn ? (
                     <>
                         <Route
-                            path="/twitter-clone"
+                            // path="/twitter-clone"
+                            index
                             element={<Home user={user} />}
                         />
                         <Route
-                            path="/twitter-clone/profile"
+                            // path="/twitter-clone/profile"
+                            path="/profile"
                             element={
                                 <Profile
                                     user={user}
@@ -30,7 +34,7 @@ function AppRouter(props) {
                         />
                     </>
                 ) : (
-                    <Route path="/twitter-clone" element={<Auth />} />
+                    <Route index element={<Auth />} />
                 )}
                 <Route path="*" element={<NotFound />} />
             </Routes>

@@ -1,4 +1,8 @@
-import { authService } from "firebaseClient";
+import {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "firebaseClient";
 import { useState } from "react";
 
 function AuthForm() {
@@ -21,12 +25,9 @@ function AuthForm() {
         e.preventDefault();
         try {
             if (isNewAccount) {
-                await authService.createUserWithEmailAndPassword(
-                    email,
-                    password
-                );
+                await createUserWithEmailAndPassword(auth, email, password);
             } else {
-                await authService.signInWithEmailAndPassword(email, password);
+                await signInWithEmailAndPassword(auth, email, password);
             }
         } catch (e) {
             console.error(e);
